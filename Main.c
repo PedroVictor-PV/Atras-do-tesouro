@@ -26,7 +26,7 @@ void embaralhar(char tabuleiro[4][4]){
 
 int main(int argc, char const *argv[]){
     char tabuleiro[4][4];
-    int pontos= 0, tempo= 6;
+    int pontos= 0, tempo= 4;
 
     printf("\n======GO TO TREASURE!======\n");
     
@@ -36,12 +36,20 @@ int main(int argc, char const *argv[]){
     char cont = 'n';
     do
     {   
-        
         printf("\nPONTOS: %d", pontos);
         printf("\nEscolha a linha [0-3]: ");
         scanf("%d", &linhaJog);
         printf("\nEscolha a coluna [0-3]: ");
         scanf("%d", &colunaJog);
+
+        if(linhaJog > 3 || colunaJog > 3)
+        {
+            printf("\nValor invalido!!");
+            printf("\nEscolha novamente a linha [0-3]: ");
+            scanf("%d", &linhaJog);
+            printf("\nEscolha novamente a coluna [0-3]: ");
+            scanf("%d", &colunaJog);
+        }
 
         if(tabuleiro[linhaJog][colunaJog]== 'o')
         {
@@ -70,9 +78,11 @@ int main(int argc, char const *argv[]){
                 printf("\n");
             }
         }
-        printf("\nCONTINUE?");
+        printf("\nCONTINUE?[s/n]");
         scanf(" %c", &cont);
     }while(cont== 's');
+
+    printf("\nPONTOS: %d", pontos);
 
     return 0;
 }
