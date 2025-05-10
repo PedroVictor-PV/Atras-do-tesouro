@@ -1,0 +1,29 @@
+# Compilação de C
+*.o
+*.out
+*.obj
+*.exe
+*.a
+*.so
+*.dll
+
+# Arquivos de backup e temporários
+*~
+*.swp
+*.swo
+*.tmp
+
+# Diretório de build (se você usar make)
+build/
+
+# Arquivos de log
+*.log
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
