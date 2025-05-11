@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
+#include <conio.h>
 
     // Adicionar socket
 
-    //MAPEAR  A MATRIZ DE 1 AO FINAL DO TAMAHO
-    //ABSTRAIR A LOGICA PARA INFORMAR O NÚMERO DO QUADRADO 
+
+    // Criar duas matrizes, uma abistraida e outra com as tesouros(pedro). 
+    // A matriz1[posicao][posicao] recebe matriz2[posicao][posicao] e verificar se o que 
+    // veio da segunda matriz é igual 'o';
+
 void mapeiaMatriz(char tabuleiro[4][4]){
     for(int i=0; i<4; i++){
         for(int j=0; j<4; j++){
@@ -20,7 +24,7 @@ void embaralha(char tabuleiro[4][4]){
     int linha = -1;
     int coluna = -1;
     int qtd=0;
-    while(qtd<5){
+    while(qtd<4){
         linha = rand()%4;
         coluna = rand()%4;
             if(tabuleiro[linha][coluna] != 'o'){
@@ -33,21 +37,20 @@ void embaralha(char tabuleiro[4][4]){
 int main(int argc, char const *argv[]){
     char tabuleiroPlayer[4][4];
     char tabuleiroTesouro[4][4];
-    
-    int pontos= 0, tentativas = 10;
+
+    int pontos= 0, tempo= 4;
 
     printf("\n======GO TO TREASURE!======\n");
     
-    //CRIAR UMA FUNÇAO PARA REDUZIR O CHAMAMENTO DUPLO
     mapeiaMatriz(tabuleiroPlayer);
     mapeiaMatriz(tabuleiroTesouro);
     embaralha(tabuleiroTesouro);
 
     int linhaJog= -1, colunaJog= -1;
-    
+
+    char cont = 'n';
     do
     {   
-        printf("\n%d Tentativas restantes!", tentativas);
         printf("\nPONTOS: %d", pontos);
         printf("\nEscolha a linha [0-3]: ");
         scanf("%d", &linhaJog);
@@ -77,11 +80,11 @@ int main(int argc, char const *argv[]){
                     printf("\n");
                     
                 }
-
                     mapeiaMatriz(tabuleiroPlayer);
                     mapeiaMatriz(tabuleiroTesouro);
                     embaralha(tabuleiroTesouro);
 
+                 
         }else
         {
             tabuleiroPlayer[linhaJog][colunaJog] = '*';
@@ -94,9 +97,12 @@ int main(int argc, char const *argv[]){
                 printf("\n");
             }
         }
-        tentativas-=1;
-        
-    }while(tentativas > 0);
+
+        // Trocar por tentativas
+
+        printf("\nCONTINUE?[s/n]");
+        scanf(" %c", &cont);
+    }while(cont== 's');
 
     printf("\nPONTOS: %d", pontos);
 
