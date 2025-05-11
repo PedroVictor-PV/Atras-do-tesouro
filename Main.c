@@ -11,15 +11,15 @@
     // A matriz1[posicao][posicao] recebe matriz2[posicao][posicao] e verificar se o que 
     // veio da segunda matriz é igual 'o';
 
-void embaralhar(char tabuleiro[4][4]){
+void mapeiaMatriz(char tabuleiro[4][4]){
     for(int i=0; i<4; i++){
         for(int j=0; j<4; j++){
             tabuleiro[i][j] = '-';
         }
     }
+}
 
-    // Separar em funções distintas
-
+void embaralha(char tabuleiro[4][4]){
     srand(time(NULL));
     int linha = -1;
     int coluna = -1;
@@ -35,15 +35,17 @@ void embaralhar(char tabuleiro[4][4]){
 }
 
 int main(int argc, char const *argv[]){
-    char tabuleiro[4][4];
-
-    // char tabuleiro2[4][4];
+    char tabuleiroPlayer[4][4];
+    char tabuleiroTesouro[4][4];
 
     int pontos= 0, tempo= 4;
 
     printf("\n======GO TO TREASURE!======\n");
     
-    embaralhar(tabuleiro);
+    mapeiaMatriz(tabuleiroPlayer);
+    mapeiaMatriz(tabuleiroTesouro);
+    embaralha(tabuleiroTesouro);
+
     int linhaJog= -1, colunaJog= -1;
 
     char cont = 'n';
@@ -64,29 +66,33 @@ int main(int argc, char const *argv[]){
             scanf("%d", &colunaJog);
         }
 
-        if(tabuleiro[linhaJog][colunaJog]== 'o')
+        tabuleiroPlayer[linhaJog][colunaJog] = tabuleiroTesouro[linhaJog][colunaJog];
+        if(tabuleiroPlayer[linhaJog][colunaJog] == 'o')
         {
-            tabuleiro[linhaJog][colunaJog] = '$';
+            tabuleiroPlayer[linhaJog][colunaJog] = '$';
             pontos+=1;
                 for(int i =0; i<4; i++)
                 {
                     for(int j=0; j<4; j++)
                     {
-                        printf(" %c", tabuleiro[i][j]);
+                        printf(" %c", tabuleiroPlayer[i][j]);
                     }
                     printf("\n");
                     
                 }
-                    embaralhar(tabuleiro);
+                    mapeiaMatriz(tabuleiroPlayer);
+                    mapeiaMatriz(tabuleiroTesouro);
+                    embaralha(tabuleiroTesouro);
+
                  
         }else
         {
-            tabuleiro[linhaJog][colunaJog] = '*';
+            tabuleiroPlayer[linhaJog][colunaJog] = '*';
             for(int i =0; i<4; i++)
             {
                 for(int j=0; j<4; j++)
                 {
-                    printf(" %c", tabuleiro[i][j]);
+                    printf(" %c", tabuleiroPlayer[i][j]);
                 }
                 printf("\n");
             }
