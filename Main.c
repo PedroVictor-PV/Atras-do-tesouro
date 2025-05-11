@@ -4,17 +4,27 @@
 #include <windows.h>
 #include <conio.h>
 
+    // Adicionar socket
+
+
+    // Criar duas matrizes, uma abistraida e outra com as tesouros(pedro). 
+    // A matriz1[posicao][posicao] recebe matriz2[posicao][posicao] e verificar se o que 
+    // veio da segunda matriz é igual 'o';
+
 void embaralhar(char tabuleiro[4][4]){
     for(int i=0; i<4; i++){
         for(int j=0; j<4; j++){
             tabuleiro[i][j] = '-';
         }
     }
+
+    // Separar em funções distintas
+
     srand(time(NULL));
     int linha = -1;
     int coluna = -1;
     int qtd=0;
-    while(qtd<3){
+    while(qtd<4){
         linha = rand()%4;
         coluna = rand()%4;
             if(tabuleiro[linha][coluna] != 'o'){
@@ -26,6 +36,9 @@ void embaralhar(char tabuleiro[4][4]){
 
 int main(int argc, char const *argv[]){
     char tabuleiro[4][4];
+
+    // char tabuleiro2[4][4];
+
     int pontos= 0, tempo= 4;
 
     printf("\n======GO TO TREASURE!======\n");
@@ -78,6 +91,9 @@ int main(int argc, char const *argv[]){
                 printf("\n");
             }
         }
+
+        // Trocar por tentativas
+
         printf("\nCONTINUE?[s/n]");
         scanf(" %c", &cont);
     }while(cont== 's');
