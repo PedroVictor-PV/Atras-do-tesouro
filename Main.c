@@ -9,11 +9,14 @@
     //ABSTRAIR A LOGICA PARA INFORMAR O NÚMERO DO QUADRA
 void mapeiaMatriz(int linha, int coluna, char tabuleiro[linha][coluna])
 {
+    //MAPEAR TABULEIRO FORMATADO COM [ 1 ]  - [ 16 ]
+    int cont= 1;
     for(int i=0; i<4; i++)
     {
         for(int j=0; j<4; j++)
         {
             tabuleiro[i][j] = '-';
+            cont ++;
         }
     }
 }
@@ -24,7 +27,7 @@ void embaralha(int linha, int coluna, char tabuleiro[linha][coluna])
     int randLinha = -1;
     int randColuna = -1;
     int qtd=0;
-    while(qtd<5)
+    while(qtd<3)
     {
         randLinha = rand()%4;
         randColuna = rand()%4;
@@ -65,28 +68,84 @@ int main(int argc, char const *argv[])
     char tabuleiroTesouro[4][4];
     int escolha;
 
+    printf("\n======GO TO TREASURE!======\n");
+
     mapeiaMatriz(4, 4, tabuleiroPlayer);
     mapeiaMatriz(4, 4, tabuleiroTesouro);
     embaralha(4, 4, tabuleiroTesouro);
-    for(int i=0; i<4; i++)
+    
+    for (int i = 0; i < 4; i ++)
     {
-        for(int j=0; j<4; j++)
+        for(int j = 0; j < 4; j ++)
         {
             printf(" %c", tabuleiroTesouro[i][j]);       
         }
         printf("\n");
     }
-    printf("Escolha: [1 | 16]");
-    scanf("%d", &escolha);
+    
+    int pontos= 0, tentativas = 3;
+
+    do
+    {
+        printf("\nPONTOS: %d", pontos);
+        printf("\nEscolha - [1 | 16]: ");
+        scanf("%d", &escolha);
+        
+        if(escolha >16)
+        {
+           printf("\nValor invalido!!");
+           printf("\nEscolha novamente a coordenada desejada - [1 | 16]: ");
+           scanf("%d", &escolha);
+        }
+
+        char a = tradutorDeCoordenada(escolha, 4, 4, tabuleiroPlayer);
+        char b = tradutorDeCoordenada(escolha, 4, 4, tabuleiroTesouro);
+
+        a = b;
+    
+            if(a == 'o')
+            {              
+                a = '$';
+                pontos+= 1;
+                //ADICIONAR COMO IMPRIMIR NA TELA QUE O PONTO FOI COMPUTADO
+                    for (int i = 0; i < 4; i ++)
+                    {
+                        for (int j = 0; j < 4; j ++)
+                        {
+                            printf(" %c", tabuleiroPlayer[i][j]);
+                        }
+                        printf("\n");
+                        
+                    }
+
+                mapeiaMatriz(4, 4, tabuleiroPlayer);
+                mapeiaMatriz(4, 4, tabuleiroTesouro);
+                embaralha(4, 4, tabuleiroTesouro);
+
+            }else
+            {
+                a = '*';
+                for(int i = 0; i < 4; i ++)
+                {
+                    for(int j = 0; j < 4; j ++)
+                    {
+                        printf(" %c", tabuleiroPlayer[i][j]);
+                    }
+                    printf("\n");
+                }
+            }
+
+            tentativas-=1;
+
+        printf("\n %c", a);
+        printf("\n %c", b);
 
 
+    } while (tentativas>0);
 
-    char a = tradutorDeCoordenada(escolha, 4, 4, tabuleiroPlayer);
-    char b = tradutorDeCoordenada(escolha, 4, 4, tabuleiroTesouro);
-
-    printf(" %c", a);
-    printf(" %c", b);
-
+    printf("\nPONTOS: %d", pontos);
+    
+   
 // -------------------------------------------------------------------------
 
     // int pontos= 0, tentativas = 10;
@@ -156,5 +215,5 @@ int main(int argc, char const *argv[])
 
     // printf("\nPONTOS: %d", pontos);
 
-    return 0;
+    return 0;
 }
