@@ -6,13 +6,7 @@
 #include "cliente_handler.h"
 #include "jogo.h"
 
-#define LIMITE_CLIENTES 20
-
-typedef struct
-{
-    char nome[110];
-    int pontos;
-} Jogador;
+#define LIMITE_CLIENTES 1
 
 extern Jogador ranking[LIMITE_CLIENTES];
 extern int totalJogadores;

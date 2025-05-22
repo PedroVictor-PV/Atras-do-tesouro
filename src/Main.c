@@ -5,7 +5,7 @@
 #include "jogo.h"
 #pragma comment(lib, "ws2_32.lib")
 
-#define LIMITE_CLIENTES 20
+#define LIMITE_CLIENTES 1
 
 CRITICAL_SECTION csRanking;
 Jogador ranking[LIMITE_CLIENTES];
