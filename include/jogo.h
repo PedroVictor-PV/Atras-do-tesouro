@@ -1,9 +1,20 @@
 #ifndef JOGO_H
 #define JOGO_H
 
-void mapeiaMatriz(char tabuleiro[6][6]);
-void embaralha(char tabuleiro[6][6]);
-int tradutorDeCoordenada(int numero, char tabuleiro[6][6], char tabuleiro2[6][6]);
-void imprimeMatriz(char tabuleiro[6][6]);
+#define LINHAS 6
+#define COLUNAS 6
+
+typedef struct 
+{
+    char nome[110];
+    int pontos;
+} Jogador;
+
+
+
+void inicializaMatriz(char tabuleiro[LINHAS][COLUNAS]);
+void embaralhaTesouros(char tabuleiro[LINHAS][COLUNAS]);
+int tradutorDeCoordenada(int pos, char tabuleiro[LINHAS][COLUNAS], char tabuleiro2[LINHAS][COLUNAS]);
+void matrizParaTexto(char tabuleiro[LINHAS][COLUNAS], char *saida);
 
 #endif
