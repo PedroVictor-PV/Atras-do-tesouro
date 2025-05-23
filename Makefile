@@ -1,31 +1,28 @@
-# Nome do executável
-TARGET = treasure_game
+# Diretórios
+SRC_DIR = src
+INC_DIR = include
+BUILD_DIR = build
+
+# Arquivos
+SOURCES = $(SRC_DIR)/main.c $(SRC_DIR)/jogo.c $(SRC_DIR)/cliente_handler.c
+OBJECTS = $(SOURCES:.c=.o)
+TARGET = $(BUILD_DIR)/main.exe
+
+# Flags
+CFLAGS = -I$(INC_DIR)
+LIBS = -lws2_32
 
 # Compilador
 CC = gcc
 
-# Diretórios
-SRC_DIR = src
-BUILD_DIR = build
-INCLUDE_DIR = include
+# Regras
+all: $(TARGET)
 
-# Arquivos fontes
-SRCS = $(SRC_DIR)/Main.c $(SRC_DIR)/jogo.c
+$(TARGET): $(SOURCES)
+	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LIBS)
 
-# Flags
-CFLAGS = -I$(INCLUDE_DIR)
-
-# Regra padrão
-all: $(BUILD_DIR)/$(TARGET).exe
-
-$(BUILD_DIR)/$(TARGET).exe: $(SRCS)
-	@mkdir -p $(BUILD_DIR)
-	$(CC) -o $@ $^ $(CFLAGS)
-
-# Limpar arquivos compilados
 clean:
-	del /Q $(BUILD_DIR)\*.exe 2>nul || true
+	del /Q $(BUILD_DIR)\*.exe 2>nul || echo Nada para limpar
 
-# Rodar o programa
 run: all
-	./$(BUILD_DIR)/$(TARGET).exe
+	$(TARGET)

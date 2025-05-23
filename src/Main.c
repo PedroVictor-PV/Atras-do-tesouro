@@ -1,86 +1,97 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <winsock2.h>
 #include <windows.h>
-#include "../include/jogo.h"
+#include "cliente_handler.h"
+#include "jogo.h"
+#pragma comment(lib, "ws2_32.lib")
 
-// Adicionar socket
+#define LIMITE_CLIENTES 1
+
+CRITICAL_SECTION csRanking;
+Jogador ranking[LIMITE_CLIENTES];
+int totalJogadores = 0;
+volatile LONG clientesConectados = 0;
 
 int main(int argc, char const *argv[])
 {
-    // -------------------------------------------------------------------------
-    char tabuleiroPlayer[6][6];
-    char tabuleiroTesouro[6][6];
-    int escolha;
+   
+    WSADATA wsa;
+    SOCKET servidor, cliente;
+    struct sockaddr_in serv, cli;
+    int tamanho;
 
-    mapeiaEmbaralha(tabuleiroPlayer, tabuleiroTesouro);
+    WSAStartup(MAKEWORD(2, 2), &wsa);
+    InitializeCriticalSection(&csRanking);
 
-    // teste
-    imprimeMatriz(tabuleiroTesouro);
-    int pontos = 0, tentativas = 4, tesouros = 0;
-
-    do
+    servidor = socket(AF_INET, SOCK_STREAM, 0);
+    if (servidor == INVALID_SOCKET) 
     {
-        printf("\n====== GO TO TREASURE! ======\n");
-        imprimeMatriz(tabuleiroPlayer);
+        printf("Erro ao criar socket\n");
+        return 1;
+    }
 
-        printf("\nPONTOS: %d", pontos);
-        printf("\nEscolha - [1 | 36]: ");
-        scanf("%d", &escolha);
+    serv.sin_family = AF_INET;
+    serv.sin_addr.s_addr = INADDR_ANY;
+    serv.sin_port = htons(8888);
 
-        if (escolha < 1 || escolha > 36)
+    if (bind(servidor, (struct sockaddr *)&serv, sizeof(serv)) == SOCKET_ERROR) 
+    {
+        printf("Erro no bind\n");
+        closesocket(servidor);
+        WSACleanup();
+        return 1;
+    }
+
+    if (listen(servidor, SOMAXCONN) == SOCKET_ERROR) 
+    {
+        printf("Erro no listen\n");
+        closesocket(servidor);
+        WSACleanup();
+        return 1;
+    }
+
+    printf("Servidor aguardando conexoes...\n");
+
+     while (1) 
+    {
+        tamanho = sizeof(cli);
+        cliente = accept(servidor, (struct sockaddr *)&cli, &tamanho);
+        if (cliente == INVALID_SOCKET) 
         {
-            printf("\nValor invalido!!");
-            printf("\nEscolha novamente a coordenada desejada - [1 | 36]: ");
-            scanf("%d", &escolha);
+            printf("Erro no accept\n");
+            continue;
         }
 
-        boolean cordPlayer = tradutorDeCoordenada(escolha, tabuleiroTesouro, tabuleiroPlayer);
-
-        while (cordPlayer == 3)
+        // Verifica se atingiu o limite
+        if (clientesConectados >= LIMITE_CLIENTES) 
         {
-            printf("\nEssa coordenada ja foi escolhida, escolha outra!\n");
-            printf("\nEscolha - [1 | 36]: ");
-            scanf("%d", &escolha);
-
-            cordPlayer = tradutorDeCoordenada(escolha, tabuleiroTesouro, tabuleiroPlayer);
+            const char* msg = "Servidor cheio. Tente novamente mais tarde.\n";
+            send(cliente, msg, (int)strlen(msg), 0);
+            closesocket(cliente);
+            printf("Cliente rejeitado: limite de %d conexoes.\n", LIMITE_CLIENTES);
+            continue;
         }
 
-        switch (cordPlayer)
+        ThreadArgs* args = malloc(sizeof(ThreadArgs));
+        args->cliente = cliente;
+
+        HANDLE thread = CreateThread(NULL, 0, threadCliente, args, 0, NULL);
+        if (thread == NULL) 
         {
-        case 0:
-            printf("\nNada aqui...\n");
-            Sleep(2000);
-            system("cls");
-            break;
-
-        case 1:
-            pontos += 1;
-            tesouros += 1;
-            printf("\nVoce encontrou um tesouro!\n");
-            imprimeMatriz(tabuleiroPlayer);
-            mapeiaEmbaralha(tabuleiroPlayer, tabuleiroTesouro);
-            Sleep(2000);
-            system("cls");
-            break;
-
-        case 2:
-            pontos += 2;
-            tesouros += 1;
-            printf("\nVoce encontrou um tesouro especial!\n");
-            imprimeMatriz(tabuleiroPlayer);
-            mapeiaEmbaralha(tabuleiroPlayer, tabuleiroTesouro);
-
-            Sleep(2000);
-            system("cls");
-
-        default:
-            printf("\n Nenhuma das alternativas \n");
-            break;
+            printf("Erro ao criar thread\n");
+            closesocket(cliente);
+            free(args);
+        } else 
+        {
+            CloseHandle(thread);
         }
+    }
 
-        tentativas -= 1;
-    } while (tentativas > 0);
+    DeleteCriticalSection(&csRanking);
+    closesocket(servidor);
+    WSACleanup();
 
+    /*
     printf("\nPONTOS: %d", pontos);
 
     Sleep(2000);
@@ -96,6 +107,6 @@ int main(int argc, char const *argv[])
     printf("Reginado Rossi\n");
     Sleep(10000);
     // -------------------------------------------------------------------------
-
+    */
     return 0;
 }
