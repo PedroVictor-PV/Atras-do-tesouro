@@ -6,7 +6,7 @@
 #include "cliente_handler.h"
 #include "jogo.h"
 
-#define LIMITE_CLIENTES 1
+#define LIMITE_CLIENTES 20
 
 extern Jogador ranking[LIMITE_CLIENTES];
 extern int totalJogadores;
@@ -23,9 +23,10 @@ DWORD WINAPI threadCliente(LPVOID param)
     int namePlayer = recv(cliente,nome,sizeof(nome) - 1, 0);
     nome[namePlayer] = '\0';
     nome[strcspn(nome, "\n")] = '\0'; 
-    
+    printf("\nPlayer conectado: %s", nome);
 
     InterlockedIncrement(&clientesConectados);
+    printf("\nTotal de players conectados: %ld\n", clientesConectados);
  
     char buffer[1024];
     char tabuleiroTesouro[6][6];
