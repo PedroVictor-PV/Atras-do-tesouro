@@ -1,10 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <winsock2.h>
+#include <windows.h>
 #include <string.h>
 #include "jogo.h"
 
+
+extern SOCKET listaClientes[LIMITE_CLIENTES];
+extern CRITICAL_SECTION csListaClientes;
+extern volatile LONG clientesConectados;
+
 void inicializaMatriz(char tabuleiro[LINHAS][COLUNAS])
+
 {
     //MAPEAR TABULEIRO FORMATADO COM [ 1 ]  - [ 16 ]
    int i = 0, j = 0;
@@ -82,4 +90,26 @@ void matrizParaTexto(char matriz[LINHAS][COLUNAS], char *saida)
         }
         strcat(saida, "\n");
     }
+}
+
+void adicionarCliente(SOCKET cliente) {
+    EnterCriticalSection(&csListaClientes);
+    for (int i = 0; i < LIMITE_CLIENTES; i++) {
+        if (listaClientes[i] == 0) {
+            listaClientes[i] = cliente;
+            break;
+        }
+    }
+    LeaveCriticalSection(&csListaClientes);
+}
+
+void removerCliente(SOCKET cliente) {
+    EnterCriticalSection(&csListaClientes);
+    for (int i = 0; i < LIMITE_CLIENTES; i++) {
+        if (listaClientes[i] == cliente) {
+            listaClientes[i] = 0;
+            break;
+        }
+    }
+    LeaveCriticalSection(&csListaClientes);
 }
