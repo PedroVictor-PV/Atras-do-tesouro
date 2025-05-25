@@ -69,9 +69,6 @@ int main()
 
         send(sock, escolha, strlen(escolha), 0);
 
-        // Após enviar a escolha do menu
-        int nomeEnviado = 0; // flag para saber se enviou o nome
-
         while (1)
         {
             int bytesRecebidos = recv(sock, resposta, sizeof(resposta) - 1, 0);
@@ -103,8 +100,11 @@ int main()
                     break;
                 }
 
-                // Pode colocar aqui se é o nome enviado para controlar lógica
-                nomeEnviado = 1;
+                if (strcmp(mensagem, "0") == 0)
+                {
+                    printf("Saindo do jogo.\n");
+                    goto fim_cliente;
+                }
                 continue;
             }
 
@@ -135,7 +135,7 @@ int main()
                 printf("Conexao encerrada pelo servidor.\n");
                 closesocket(sock);
                 WSACleanup();
-                exit(0);
+                goto fim_cliente;
             }
             resposta[bytesRecebidos] = '\0';
 
@@ -154,8 +154,16 @@ int main()
                 if (strcmp(mensagem, "0") == 0)
                 {
                     printf("Saindo do jogo.\n");
-                    exit(0);
+                    goto fim_cliente;
                 }
+            }
+            else if (strncmp(resposta, "[ACERTO]", 8) == 0)
+            {
+                printf("Acertou!\n");
+            }
+            else if (strncmp(resposta, "[ERRO]", 6) == 0)
+            {
+                printf("Errou!\n");
             }
             else if (strncmp(resposta, "[CLEAR]", 7) == 0)
             {
@@ -178,9 +186,7 @@ int main()
             else if (strncmp(resposta, "[FIMJOGO]", 9) == 0)
             {
                 printf("%s", resposta + 9);
-                closesocket(sock);
-                WSACleanup();
-                exit(0);
+                goto fim_cliente;
             }
             else if (strncmp(resposta, "[VOLTAR]", 8) == 0)
             {
@@ -215,5 +221,9 @@ int main()
         }
     }
 
+fim_cliente:
+    closesocket(sock);
+    WSACleanup();
+    printf("\nObrigado por jogar!\n");
     return 0;
 }

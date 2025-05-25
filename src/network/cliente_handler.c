@@ -6,6 +6,7 @@
 #include "network/cliente_handler.h"
 #include "core/jogo.h"
 #include "utils/matriz_utils.h"
+#include "utils/ranking.h"
 
 extern volatile LONG jogoIniciado;
 extern Jogador ranking[LIMITE_CLIENTES];
@@ -230,10 +231,30 @@ bool processarJogo(SOCKET cliente)
         tentativas--;
     }
 
-    // Fim do jogo
-    char fim[256];
-    sprintf(fim, "[FIMJOGO]\nFIM DE JOGO!\nTesouros encontrados: %d\nPontuacao final: %d", tesouros, pontos);
-    return send(cliente, fim, (int)strlen(fim), 0) >= 0;
+    // ...fim do jogo...
+char fim[256];
+sprintf(fim, "[FIMJOGO]\nFIM DE JOGO!\nTesouros encontrados: %d\nPontuacao final: %d\n", tesouros, pontos);
+send(cliente, fim, (int)strlen(fim), 0);
+
+// Ranking
+RankingEntry ranking[MAX_RANKINGS];
+int count = carregar_ranking(ranking, MAX_RANKINGS);
+
+adicionar_ao_ranking(ranking, &count, nome, pontos);
+ordenar_ranking(ranking, count);
+salvar_ranking(ranking, count);
+
+// Monta e envia o ranking
+char rankingMsg[2048];
+sprintf(rankingMsg, "\n==== RANKING FINAL ====\n");
+for (int i = 0; i < count && i < 10; i++) {
+    char linha[128];
+    sprintf(linha, "%d. %s - %d pontos\n", i + 1, ranking[i].nome, ranking[i].pontos);
+    strcat(rankingMsg, linha);
+}
+send(cliente, rankingMsg, (int)strlen(rankingMsg), 0);
+
+return true;
 }
 
 bool solicitarNome(SOCKET cliente, char* nome)
