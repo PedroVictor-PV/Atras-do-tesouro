@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <winsock2.h>
-#pragma comment(lib, "ws2_32.lib")
 
 void exibirMenu()
 {
+    system("cls");
     printf("============================\n");
     printf("|           MENU           |\n");
     printf("============================\n");
@@ -44,7 +44,7 @@ int main()
     // Configuração do servidor
     servidor.sin_family = AF_INET;
     servidor.sin_port = htons(porta);
-    servidor.sin_addr.s_addr = inet_addr("127.0.0.1");
+    servidor.sin_addr.s_addr = inet_addr("127.0.0.1"); // 26.176.4.160 - 127.0.0.1
 
     // Conexão ao servidor
     printf("Conectando ao servidor na porta %d...\n", porta);
@@ -60,6 +60,7 @@ int main()
 
     while (1)
     {
+        system("cls");
         int voltarAoMenu = 0;
         exibirMenu();
 
@@ -74,6 +75,7 @@ int main()
             int bytesRecebidos = recv(sock, resposta, sizeof(resposta) - 1, 0);
             if (bytesRecebidos <= 0)
             {
+                system("cls");
                 printf("Conexao encerrada pelo servidor.\n");
                 closesocket(sock);
                 WSACleanup();
@@ -83,6 +85,7 @@ int main()
 
             if (strncmp(resposta, "[AGUARDE]", 9) == 0)
             {
+                system("cls");
                 printf("%s", resposta + 9);
                 fflush(stdout);
                 continue;
@@ -90,6 +93,7 @@ int main()
 
             if (strncmp(resposta, "[INPUT]", 7) == 0)
             {
+                system("cls");
                 printf("%s", resposta + 7);
                 fgets(mensagem, sizeof(mensagem), stdin);
                 mensagem[strcspn(mensagem, "\n")] = '\0';
@@ -129,6 +133,7 @@ int main()
         // Lógica do jogo
         while (1)
         {
+            system("cls");
             int bytesRecebidos = recv(sock, resposta, sizeof(resposta) - 1, 0);
             if (bytesRecebidos <= 0)
             {
@@ -220,7 +225,8 @@ int main()
             }
         }
     }
-
+Sleep(3000);
+system("cls");
 fim_cliente:
     closesocket(sock);
     WSACleanup();

@@ -196,10 +196,11 @@ bool processarJogo(SOCKET cliente)
         switch (resultado)
         {
         case 0:
-            if (send(cliente, "[CLEAR]\nNada aqui...\n", 25, 0) < 0) {
-                return false;
-            }
-            break;
+        if (send(cliente, "[CLEAR]\nNada aqui...\n", 25, 0) < 0) {
+            return false;
+        }
+        Sleep(1000); // Dá tempo do cliente ler antes de atualizar
+        break;
 
         case 1:
             pontos += 1;
@@ -230,31 +231,21 @@ bool processarJogo(SOCKET cliente)
 
         tentativas--;
     }
-
+    system("cls");
+            
     // ...fim do jogo...
-char fim[256];
-sprintf(fim, "[FIMJOGO]\nFIM DE JOGO!\nTesouros encontrados: %d\nPontuacao final: %d\n", tesouros, pontos);
-send(cliente, fim, (int)strlen(fim), 0);
+    RankingEntry ranking[MAX_RANKINGS];
+    int count = carregar_ranking(ranking, MAX_RANKINGS);
 
-// Ranking
-RankingEntry ranking[MAX_RANKINGS];
-int count = carregar_ranking(ranking, MAX_RANKINGS);
+    adicionar_ao_ranking(ranking, &count, nome, pontos);
+    ordenar_ranking(ranking, count);
+    salvar_ranking(ranking, count);
 
-adicionar_ao_ranking(ranking, &count, nome, pontos);
-ordenar_ranking(ranking, count);
-salvar_ranking(ranking, count);
+    // Exibe o ranking no terminal do servidor
+    printf("\n==== RANKING FINAL ====\n");
+    exibir_ranking(ranking, count);
 
-// Monta e envia o ranking
-char rankingMsg[2048];
-sprintf(rankingMsg, "\n==== RANKING FINAL ====\n");
-for (int i = 0; i < count && i < 10; i++) {
-    char linha[128];
-    sprintf(linha, "%d. %s - %d pontos\n", i + 1, ranking[i].nome, ranking[i].pontos);
-    strcat(rankingMsg, linha);
-}
-send(cliente, rankingMsg, (int)strlen(rankingMsg), 0);
-
-return true;
+    return true;
 }
 
 bool solicitarNome(SOCKET cliente, char* nome)

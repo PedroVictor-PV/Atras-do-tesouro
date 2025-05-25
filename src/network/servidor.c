@@ -127,13 +127,15 @@ bool executarLoopPrincipal(SOCKET servidor)
             continue;
         }
 
-        // Fechar handle da thread (ela roda independente)
+        // ...dentro do while(1)...
+        // Após criar a thread do cliente:
         CloseHandle(hThreadCliente);
-        
-        printf("Cliente conectado. Total: %ld/%d\n", 
-               InterlockedCompareExchange(&clientesConectados, 0, 0), 
-               LIMITE_CLIENTES);
-    }
 
-    return true;
+        printf("Cliente conectado. Total: %ld/%d\n",
+            InterlockedCompareExchange(&clientesConectados, 0, 0),
+            LIMITE_CLIENTES);
+        }
+
+        // Fora do while(1):
+        return true;
 }
