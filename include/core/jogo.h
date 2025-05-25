@@ -11,18 +11,19 @@
 extern SOCKET listaClientes[LIMITE_CLIENTES];
 extern CRITICAL_SECTION csListaClientes;
 extern volatile LONG clientesConectados;
+
 typedef struct 
 {
     char nome[110];
     int pontos;
 } Jogador;
 
-
+// Funções principais do jogo
 void inicializaMatriz(char tabuleiro[LINHAS][COLUNAS]);
 void embaralhaTesouros(char tabuleiro[LINHAS][COLUNAS]);
 int tradutorDeCoordenada(int pos, char tabuleiro[LINHAS][COLUNAS], char tabuleiro2[LINHAS][COLUNAS]);
-void matrizParaTexto(char tabuleiro[LINHAS][COLUNAS], char *saida);
 
+// Funções de gerenciamento de clientes (movidas para cliente_handler)
 void adicionarCliente(SOCKET cliente);
 void removerCliente(SOCKET cliente);
 

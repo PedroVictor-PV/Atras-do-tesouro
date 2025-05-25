@@ -70,8 +70,7 @@ int main()
         send(sock, escolha, strlen(escolha), 0);
 
         // Após enviar a escolha do menu
-
-        int nomeEnviado = 0; // flag para saber se enviou o nome1
+        int nomeEnviado = 0; // flag para saber se enviou o nome
 
         while (1)
         {
@@ -83,7 +82,7 @@ int main()
                 WSACleanup();
                 exit(0);
             }
-             resposta[bytesRecebidos] = '\0';
+            resposta[bytesRecebidos] = '\0';
 
             if (strncmp(resposta, "[AGUARDE]", 9) == 0)
             {

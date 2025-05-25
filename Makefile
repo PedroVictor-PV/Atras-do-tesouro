@@ -1,36 +1,21 @@
-# Diretórios
-SRC_DIR = src
-INC_DIR = include
-BUILD_DIR = build
-
-# Arquivos fonte
-SOURCES = \
-	$(SRC_DIR)/main.c \
-	$(SRC_DIR)/jogo.c \
-	$(SRC_DIR)/cliente_handler.c \
-	$(SRC_DIR)/threads.c
-
-# Arquivo de saída
-TARGET = $(BUILD_DIR)/main.exe
-
-# Flags de compilação
-CFLAGS = -I$(INC_DIR)
-LIBS = -lws2_32
-
-# Compilador
 CC = gcc
+CFLAGS = -Iinclude -Wall -Wextra -g
+SRC_DIR = src
+BIN_DIR = bin
 
-# Regra padrão
-all: $(TARGET)
+SRCS := $(shell find $(SRC_DIR) -name '*.c')
+OBJS := $(SRCS:%.c=%.o)
 
-# Compilação
-$(TARGET): $(SOURCES)
-	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LIBS)
+all: $(BIN_DIR)/servidor.exe $(BIN_DIR)/client.exe
 
-# Limpeza
+$(BIN_DIR)/servidor.exe: $(SRCS)
+    $(CC) $(CFLAGS) -o $@ $(filter %servidor.c %Main.c,$^) $(filter-out %client.c,$(filter-out %cliente_handler.c,$(filter-out %main.c,$(SRCS))))
+
+$(BIN_DIR)/client.exe: $(SRCS)
+    $(CC) $(CFLAGS) -o $@ $(filter %client.c %cliente_handler.c %main.c,$^) $(filter-out %servidor.c,$(filter-out %Main.c,$(SRCS))))
+
 clean:
-	del /Q $(BUILD_DIR)\*.exe 2>nul || echo Nada para limpar
+    rm -f $(BIN_DIR)/*.exe
+    rm -f $(SRC_DIR)/**/*.o
 
-# Execução
-run: all
-	$(TARGET)
+.PHONY: all clean
