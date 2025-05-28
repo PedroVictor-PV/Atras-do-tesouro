@@ -1,20 +1,31 @@
 @echo off
-cls
-echo Compilando servidor do jogo "Atras do Tesouro"...
+setlocal
+
+set CC=gcc
+set CFLAGS=-Iinclude -Wall -Wextra -g
+set SRC_DIR=src
+set BIN_DIR=bin
+
+if not exist %BIN_DIR% mkdir %BIN_DIR%
+
+REM Compilar servidor
+echo Compilando servidor...
+%CC% %CFLAGS% ^
+  %SRC_DIR%\core\jogo.c ^
+  %SRC_DIR%\network\servidor.c ^
+  %SRC_DIR%\threads\threads.c ^
+  %SRC_DIR%\util\matriz_utils.c ^
+  %SRC_DIR%\Main.c ^
+  -o %BIN_DIR%\servidor.exe
+
+REM Compilar cliente
+echo Compilando cliente...
+%CC% %CFLAGS% ^
+  %SRC_DIR%\network\cliente_handler.c ^
+  %SRC_DIR%\client.c ^
+  %SRC_DIR%\util\matriz_utils.c ^
+  -o %BIN_DIR%\client.exe
+
 echo.
-
-:: Compila todos os arquivos fonte
-gcc src\main.c src\cliente_handler.c src\jogo.c -Iinclude -o build\main.exe -lws2_32
-
-:: Verifica se a compilação foi bem-sucedida
-if %errorlevel% neq 0 (
-    echo.
-    echo [ERRO] A compilação falhou! Verifique se todos os arquivos estão corretos.
-    pause
-    exit /b
-)
-
-echo.
-echo [SUCESSO] Compilação concluída!
-echo Executável gerado em: build\main.exe
-pause
+echo Compilação finalizada!
+endlocal
