@@ -21,7 +21,7 @@
 
 ### Objetivo
 
-Encontrar o máximo de tesouros possível em até **4 tentativas** por sessão.
+Encontrar o máximo de tesouros possível em até **10 tentativas** por sessão.
 
 ### Tabuleiro
 
@@ -40,7 +40,7 @@ Encontrar o máximo de tesouros possível em até **4 tentativas** por sessão.
 -   O jogador escolhe uma posição (1 a 36) por tentativa.
 -   Encontrar um tesouro reorganiza o tabuleiro com novos tesouros aleatórios.
 -   Posições já escolhidas não podem ser selecionadas novamente na mesma sessão.
--   Limite de 4 tentativas por sessão.
+-   Limite de 10 tentativas por sessão.
 -   Digite `0` para sair do jogo e retornar ao menu.
 
 ### Menu do Cliente
@@ -218,7 +218,7 @@ Voce encontrou um tesouro!
 
 ### Limitações Atuais
 -   **Técnicas:** Máximo de 20 clientes, porta fixa (`8888`), exclusivo para Windows, sem persistência de dados.
--   **Gameplay:** Limite fixo de 4 tentativas, tabuleiro fixo 6x6, sem níveis de dificuldade.
+-   **Gameplay:** Limite fixo de 10 tentativas, tabuleiro fixo 6x6, sem níveis de dificuldade.
 
 ### Melhorias Futuras
 -   **Funcionalidades:** Múltiplos níveis, sistema de autenticação, persistência do ranking, chat e modo torneio.
@@ -242,7 +242,7 @@ Voce encontrou um tesouro!
 5.  Abra um **Pull Request**.
 
 ### Desenvolvedores
--   Pedro of War
--   Gabriel Chico
--   Mano Morango
--   Reginaldo Rossi
+-   [Pedro Victor Cavalcante De Brito](https://github.com/PedroVictor-PV)
+-   Gabriel Luis dos Reis Feitosa Oliveira
+-   Luis Miguel De Sousa De Castro
+-   Regis Michael
