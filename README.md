@@ -243,6 +243,6 @@ Voce encontrou um tesouro!
 
 ### Desenvolvedores
 -   [Pedro Victor Cavalcante De Brito](https://github.com/PedroVictor-PV)
--   Gabriel Luis dos Reis Feitosa Oliveira
--   Luis Miguel De Sousa De Castro
--   Regis Michael
+-   [Gabriel Luis dos Reis Feitosa Oliveira](https://github.com/Gabriel-programmer-rookie)
+-   [Luis Miguel De Sousa De Castro](https://github.com/LuisMiguelD)
+-   [Regis Michael](https://github.com/RegisMichael25)
